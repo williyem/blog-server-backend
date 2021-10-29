@@ -11,6 +11,12 @@ const PostSchema = new mongoose.Schema({
   author: {
     type: String,
   },
+  likes: {
+    type: Number,
+  },
+  dislikes: {
+    type: Number,
+  },
 });
 
 const Post = mongoose.model("post", PostSchema);

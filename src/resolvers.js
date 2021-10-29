@@ -12,8 +12,15 @@ const resolvers = {
   },
   Mutation: {
     createPost: async (parent, args, context, info) => {
-      const { title, description, author } = args.post;
-      const post = new Post({ title, description, author });
+      const { title, description, author, likes, dislikes } = args.post;
+      const post = new Post({ title, description, author, likes, dislikes });
+      if (likes === undefined) {
+        post.likes = 0;
+      }
+      if (dislikes === undefined) {
+        post.dislikes = 0;
+      }
+
       await post.save();
       return post;
     },
@@ -41,7 +48,20 @@ const resolvers = {
         { title, description, author },
         { new: true }
       );
-      return post;
+      await Post.updateOne(id);
+    },
+
+    likePost: async (parent, args, context, info) => {
+      const { id } = args;
+      const { likes } = Post.findById(id);
+      await Post.findByIdAndUpdate(id, { $inc: { likes: 1 } });
+      return "post has been liked";
+    },
+    dislikePost: async (parent, args, context, info) => {
+      const { id } = args;
+      const { likes } = Post.findById(id);
+      await Post.findByIdAndUpdate(id, { $inc: { dislikes: 1 } });
+      return "post has been disliked";
     },
   },
 };

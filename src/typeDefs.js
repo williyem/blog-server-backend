@@ -9,8 +9,6 @@ const typeDefs = gql`
   }
 
   type Query {
-    hello: String
-
     getAllPosts: [Post]
 
     getPost(id: ID): Post
